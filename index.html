@@ -30,6 +30,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- display=block：字型載入前不顯示，避免先閃出 ligature 的英文字 -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=block" rel="stylesheet">
+<!-- 只載 Font Awesome 的核心與品牌集，用於課程卡右上的技術 logo -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/brands.min.css">
 <link rel="stylesheet" href="css/style.css">
 <script src="js/main.js" defer></script>
 
@@ -64,10 +69,7 @@
   <main>
     <section class="hero wrap">
       <h1>從零開始的<br>網頁設計課程</h1>
-      <p class="lede">
-        <span>從看得懂一行程式，到親手交出一個能上線的網站。</span>
-        <span>用 AI 當開發夥伴，把摸索的時間換成累積作品。</span>
-      </p>
+      <p class="lede">從看得懂一行程式，到親手交出一個能上線的網站。</p>
     </section>
 
     <section class="choose wrap">
@@ -76,19 +78,19 @@
       <div class="paths" id="paths">
 
         <a class="path" href="https://wdaweb.github.io/frontend" style="--c:var(--front)" data-accent="34,224,200">
-          <p class="path-kind">打好畫面與互動的底子</p>
+          <i class="fa-brands fa-vuejs path-logo" aria-hidden="true"></i>
+          <p class="path-kind"><span class="ico" aria-hidden="true">web</span>打好畫面與互動的底子</p>
           <h3>前端網頁技術<br>與 AI 應用</h3>
-          <p class="desc">以 HTML、CSS、JavaScript 打底，用 Vue 做出會反應的介面，再接上 Node.js 與資料庫。</p>
           <ul class="chips">
-            <li>HTML</li><li>CSS</li><li>JavaScript</li><li>Tailwind</li><li>Vue</li><li>Node.js</li><li>MongoDB</li>
+            <li>HTML</li><li>CSS</li><li>JavaScript</li><li>Bootstrap</li><li>Tailwind</li><li>Vue</li><li>Node.js</li><li>MongoDB</li>
           </ul>
           <span class="go"><span class="rule" aria-hidden="true"></span>查看課程介紹</span>
         </a>
 
         <a class="path" href="https://wdaweb.github.io/backend" style="--c:var(--full)" data-accent="154,107,255">
-          <p class="path-kind">一個人做完一整個網站</p>
+          <i class="fa-brands fa-php path-logo" aria-hidden="true"></i>
+          <p class="path-kind"><span class="ico" aria-hidden="true">dns</span>一個人做完一整個網站</p>
           <h3>全端網頁開發<br>與 AI 應用</h3>
-          <p class="desc">用 PHP 與 Laravel 寫伺服器端邏輯，搭配 MySQL 存放資料，把前台與後台一起蓋起來。</p>
           <ul class="chips">
             <li>HTML</li><li>CSS</li><li>JavaScript</li><li>Bootstrap</li><li>PHP</li><li>Laravel</li><li>MySQL</li>
           </ul>
@@ -102,11 +104,10 @@
   <footer class="promise">
     <div class="wrap">
       <ul>
-        <li>政府自辦訓練課程<span class="l2">待業民眾完全免費</span></li>
-        <li>轉職網頁開發人員<span class="l2">掌握就業必備職能</span></li>
-        <li>由淺入深學習技術<span class="l2">強化職場的競爭力</span></li>
+        <li><span class="ico" aria-hidden="true">money_off</span><span class="txt">政府自辦訓練課程<span class="l2">待業民眾完全免費</span></span></li>
+        <li><span class="ico" aria-hidden="true">work</span><span class="txt">轉職網頁開發人員<span class="l2">掌握就業必備職能</span></span></li>
+        <li><span class="ico" aria-hidden="true">trending_up</span><span class="txt">由淺入深學習技術<span class="l2">強化職場的競爭力</span></span></li>
       </ul>
-      <p class="colophon">實際授課內容與招訓時間，以正式招訓簡章公告為準。</p>
     </div>
   </footer>
 
