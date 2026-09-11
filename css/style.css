@@ -1,0 +1,390 @@
+/* ===== 泰山職訓網頁設計 — 入口頁 ===== */
+
+:root {
+  --ink:        #0a0d13;   /* 中性深底，兩班共用 */
+  --chrome-bg:  #070b1a;   /* 上下列底色 */
+  --chrome-line: rgba(230, 238, 240, .11);
+  --chrome-glow: transparent;
+  --chrome-icon: #8aa3a8;
+  --paper:      #e6eef0;
+  --muted:      #8aa3a8;
+  --front:      #3fc4b8;   /* logo 青 */
+  --front-deep: #0e2f31;
+  --back:       #8e7be8;   /* PHP 紫 */
+  --back-deep:  #171432;
+  --gold:       #fbc311;   /* logo 黃 */
+  --seam:       7deg;
+  --bar:        68px;
+  --ribbon:     52px;
+  --font-tc:    "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-tc);
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; margin: 0; padding: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* ---------- 頂部列 ---------- */
+
+.topbar {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 auto;
+  min-height: var(--bar);
+  padding: 0 clamp(16px, 4vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--chrome-bg);
+  border-bottom: 1px solid var(--chrome-line);
+  box-shadow: 0 14px 52px -8px var(--chrome-glow);
+  transition: border-color .45s ease, box-shadow .45s ease;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { display: block; }
+
+.brand__name {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(15px, 2.2vw, 19px);
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+.brand__name b { color: var(--paper); font-weight: 900; }
+
+.facts {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 28px);
+  font-family: var(--font-tc);
+  font-size: clamp(12px, 1.5vw, 14px);
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+.facts li { display: flex; align-items: center; gap: 6px; }
+.facts i { color: var(--chrome-icon); font-size: 1.1em; transition: color .45s ease; }
+.facts__num {
+  font-family: var(--font-mono);
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-right: 2px;
+}
+
+/* 滑入哪一班，上下列就換成該班的顏色 */
+body[data-active="front"] {
+  --chrome-line: rgba(63, 196, 184, .85);
+  --chrome-glow: rgba(63, 196, 184, .45);
+  --chrome-icon: var(--front);
+}
+body[data-active="back"] {
+  --chrome-line: rgba(142, 123, 232, .85);
+  --chrome-glow: rgba(142, 123, 232, .45);
+  --chrome-icon: var(--back);
+}
+
+/* ---------- 雙分割主體 ---------- */
+
+.split {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pane {
+  position: relative;
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: clamp(28px, 5vh, 64px) clamp(24px, 5vw, 72px);
+  transition: flex-grow .5s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* 斜切底色：後宣告的 pane 疊在前者之上，形成一道接縫 */
+.pane::before {
+  content: "";
+  position: absolute;
+  inset: 0 -24vh;
+  z-index: -2;
+  transform: skewX(calc(var(--seam) * -1));
+  background: var(--pane-bg);
+  transition: filter .5s ease, box-shadow .45s ease;
+}
+
+.pane--front {
+  --pane-bg: radial-gradient(120% 90% at 15% 25%, #12403f 0%, var(--front-deep) 45%, var(--ink) 100%);
+  --accent: var(--front);
+  justify-content: flex-end;
+  padding-right: clamp(28px, 8vw, 120px);
+}
+.pane--back {
+  --pane-bg: radial-gradient(120% 90% at 85% 25%, #2f2560 0%, var(--back-deep) 45%, var(--ink) 100%);
+  --accent: var(--back);
+  padding-left: clamp(28px, 8vw, 120px);
+}
+.pane--back::before {
+  --seam-front: .2;
+  --seam-back: .2;
+  inset: 0 -24vh 0 0;
+  border-left: 2px solid var(--back);
+  box-shadow:
+    -2px 0 0 0 rgba(63, 196, 184, .9),
+    -4px 0 64px 2px rgba(63, 196, 184, var(--seam-front)),
+    inset 4px 0 64px -8px rgba(142, 123, 232, var(--seam-back));
+}
+body[data-active="front"] .pane--back::before { --seam-front: .62; }
+body[data-active="back"]  .pane--back::before { --seam-back: .62; }
+
+.pane__body {
+  position: relative;
+  width: min(430px, 100%);
+}
+
+/* 背景浮水印圖示 */
+.pane__mark {
+  position: absolute;
+  z-index: -1;
+  font-size: clamp(180px, 22vw, 340px);
+  line-height: 1;
+  color: var(--accent);
+  opacity: .07;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.pane--front .pane__mark { left: 4%; }
+.pane--back  .pane__mark { right: 4%; }
+
+.pane__file {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .08em;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+.pane__file::before { content: "// "; opacity: .55; }
+
+.pane__title {
+  font-size: clamp(30px, 4.4vw, 48px);
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: .01em;
+  margin: 0 0 14px;
+}
+
+.pane__line {
+  max-width: 30ch;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.85;
+  color: var(--muted);
+  margin: 0 0 26px;
+}
+
+/* ---------- 技術棧圖示 ---------- */
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.stack li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid rgba(230, 238, 240, .14);
+  border-radius: 999px;
+  background: rgba(7, 23, 27, .45);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--paper);
+  opacity: .9;
+  transition: border-color .35s ease, transform .25s ease, opacity .35s ease;
+}
+.stack li:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.stack i { font-size: 17px; color: var(--accent); }
+
+/* ---------- 進入按鈕 ---------- */
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  border: 1.5px solid var(--accent);
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: .05em;
+  color: var(--accent);
+  background: transparent;
+  transition: background-color .3s ease, color .3s ease, gap .3s ease, box-shadow .4s ease;
+}
+.cta i { font-size: 13px; }
+
+.pane:hover .cta,
+.pane:focus-visible .cta {
+  background: var(--accent);
+  color: var(--ink);
+  gap: 16px;
+  box-shadow: 0 0 38px -6px var(--accent);
+}
+
+.pane:hover::before,
+.pane:focus-visible::before {
+  filter: brightness(1.45) saturate(1.15);
+}
+
+.pane:hover .pane__mark,
+.pane:focus-visible .pane__mark {
+  opacity: .2;
+  transform: translateY(-50%) scale(1.06);
+}
+
+.pane:hover .stack li,
+.pane:focus-visible .stack li {
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+  opacity: 1;
+}
+
+/* 展開：滑入的一側變寬，另一側退讓 */
+.split:hover .pane          { flex-grow: .82; }
+.split:hover .pane:hover,
+.split .pane:focus-visible  { flex-grow: 1.3; }
+
+/* ---------- 底部標語 ---------- */
+
+.ribbon {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 var(--ribbon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--chrome-bg);
+  border-top: 1px solid var(--chrome-line);
+  box-shadow: 0 -14px 52px -8px var(--chrome-glow);
+  transition: border-color .45s ease, box-shadow .45s ease;
+}
+.ribbon__icon { color: var(--chrome-icon); font-size: 14px; transition: color .45s ease; }
+.ribbon__text {
+  margin: 0;
+  font-size: clamp(13px, 1.7vw, 15px);
+  letter-spacing: .12em;
+  color: var(--muted);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.ribbon__text.is-out { opacity: 0; transform: translateY(6px); }
+
+/* ---------- 載入時的一次接縫掃描 ---------- */
+
+.sweep {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: var(--ink);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  animation: sweep-out 1s cubic-bezier(.76, 0, .24, 1) forwards;
+}
+@keyframes sweep-out {
+  to { clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%); }
+}
+
+/* ---------- 窄螢幕：改為上下堆疊、取消斜切 ---------- */
+
+@media (max-width: 991.98px) and (orientation: portrait) {
+  :root { --seam: 0deg; --bar: 56px; --ribbon: 44px; }
+  .split { flex-direction: column; }
+  .pane {
+    flex: 1 1 50%;
+    justify-content: flex-start;
+    padding: clamp(14px, 2.4vh, 28px) clamp(20px, 6vw, 40px);
+  }
+  .pane--front, .pane--back {
+    padding-left: clamp(20px, 6vw, 40px);
+    padding-right: clamp(20px, 6vw, 40px);
+  }
+  .pane::before { inset: 0; }
+  .pane--back::before { inset: 0; border-left: 0; border-top: 2px solid var(--back); }
+  .pane__body { width: 100%; }
+  .pane__mark { font-size: clamp(160px, 42vw, 260px); opacity: .06; }
+  .pane--front .pane__mark { left: auto; right: 2%; }
+  .pane--back .pane__mark { left: auto; right: 2%; }
+  .pane__file { font-size: 12px; margin-bottom: clamp(4px, 1vh, 10px); }
+  .pane__title { font-size: clamp(23px, 3.4vh, 30px); margin-bottom: clamp(4px, 1vh, 10px); }
+  .pane__line { font-size: 13px; line-height: 1.7; max-width: 34ch; margin-bottom: clamp(8px, 1.8vh, 18px); }
+  .stack { gap: 6px; margin-bottom: clamp(10px, 2vh, 20px); }
+  .stack li { padding: 5px 10px; font-size: 11px; gap: 6px; }
+  .stack i { font-size: 15px; }
+  .cta { padding: 9px 20px; font-size: 14px; }
+  .split:hover .pane,
+  .split:hover .pane:hover,
+  .split .pane:focus-visible { flex-grow: 1; }
+}
+
+@media (max-width: 575.98px) and (orientation: portrait) {
+  .topbar { padding: 0 16px; gap: 8px; }
+  .brand { gap: 8px; }
+  .brand img { width: 32px; height: 32px; }
+  .brand__name { font-size: 14px; letter-spacing: .02em; }
+  .facts { gap: 10px; font-size: 10px; }
+  .facts li:nth-child(2) { display: none; }
+  .facts__num { font-size: 1.5em; }
+}
+
+/* ---------- 矮視窗（橫向手機、小筆電）：等比壓縮，維持不捲動 ---------- */
+
+@media (max-height: 620px) {
+  :root { --bar: 48px; --ribbon: 36px; }
+  .brand img { width: 32px; height: 32px; }
+  .brand__name { font-size: 15px; }
+  .pane { padding-top: 10px; padding-bottom: 10px; }
+  .pane--front { padding-right: clamp(20px, 5vw, 64px); }
+  .pane--back { padding-left: clamp(20px, 5vw, 64px); }
+  .pane__mark { font-size: clamp(140px, 60vh, 300px); }
+  .pane__file { font-size: 11px; margin-bottom: 6px; }
+  .pane__title { font-size: clamp(20px, 5.4vh, 34px); margin-bottom: 6px; }
+  .pane__line { display: none; }
+  .stack { gap: 5px; margin-bottom: 12px; }
+  .stack li { padding: 4px 9px; font-size: 10.5px; gap: 5px; }
+  .stack i { font-size: 14px; }
+  .cta { padding: 8px 18px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
