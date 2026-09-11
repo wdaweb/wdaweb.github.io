@@ -316,18 +316,34 @@ body[data-active="back"]  .pane--back::before { --seam-back: .62; }
   inset: 0;
   z-index: 50;
   pointer-events: none;
-  background: var(--ink);
+  background: var(--chrome-bg);
+  /* 接縫在半高處的水平位移：tan(7deg) x 50vh */
+  --sweep-x: 6.14vh;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   animation: sweep-out 1s cubic-bezier(.76, 0, .24, 1) forwards;
 }
+
+/* 沿著接縫的方向分開，不是從垂直中線 */
 @keyframes sweep-out {
-  to { clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%); }
+  to {
+    clip-path: polygon(
+      calc(50% + var(--sweep-x)) 0,
+      calc(50% + var(--sweep-x)) 0,
+      calc(50% - var(--sweep-x)) 100%,
+      calc(50% - var(--sweep-x)) 100%);
+  }
+}
+
+/* 直向堆疊時接縫是水平的，改成上下分開 */
+@keyframes sweep-out-h {
+  to { clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%); }
 }
 
 /* ---------- 窄螢幕：改為上下堆疊、取消斜切 ---------- */
 
 @media (max-width: 991.98px) and (orientation: portrait) {
   :root { --seam: 0deg; --bar: 56px; --ribbon: 44px; }
+  .sweep { animation-name: sweep-out-h; }
   .split { flex-direction: column; }
   .pane {
     flex: 1 1 50%;
